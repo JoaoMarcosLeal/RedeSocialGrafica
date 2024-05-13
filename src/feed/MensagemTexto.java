@@ -23,7 +23,9 @@ class MensagemTexto extends Mensagem {
         super(autor);
         this.texto = texto;
     }
-
+    public boolean temfoto() {
+        return false;
+    }
     @Override
     /**
      * Retorna o conteúdo da mensagem (nesse caso o texto da mensagem)

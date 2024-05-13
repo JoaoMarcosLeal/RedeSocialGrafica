@@ -5,18 +5,23 @@ import java.awt.FlowLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
-
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
 
 import feed.FeedNoticias;
 import feed.Publicacao;
+
+import javax.imageio.ImageIO;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
+import java.awt.Image;
+
+import javax.swing.*;
+import java.awt.image.BufferedImage;
+
 
 /**
  * Classe criada para implementar a interface gráfica da Rede Social.
@@ -37,9 +42,15 @@ public class TelaRedeSocial {
     private JButton botaoCurtir;
     // Botão para comentar uma mensagem do feed
     private JButton botaoComentar;
+    // Botão para visualizar uma mensagem do feed
+    private JButton botaoVisu;
+
+    // Botão para comentar uma mensagem do feed
+    private JButton botaoPostarFoto;
     
     // Objeto que representa a Regra de Negócios (a lógica da Rede Social em si)
     private FeedNoticias feed;
+
     
     /**
      * Construtor da classe: cria o feed, os componentes e monta a tela.
@@ -67,10 +78,13 @@ public class TelaRedeSocial {
      */
     private void criarComponentes() {
         // criando os componentes
+        
         areaTextoFeed = new JTextArea();
         botaoPostarMensagem = new JButton("Postar Mensagem");
         botaoCurtir = new JButton("Curtir");
+        botaoVisu = new JButton("Visualizar");
         botaoComentar = new JButton("Comentar");
+        botaoPostarFoto = new JButton("Postar Foto");
         
         // impede que o usuário edite a área de texto do feed
         areaTextoFeed.setEditable(false);
@@ -82,6 +96,14 @@ public class TelaRedeSocial {
                 postarMensagem();
             }            
         });
+
+        
+        botaoPostarFoto.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                postarFoto();
+            }
+        });
         
         // adiciona o método que tratará o evento de clique no botão Curtir
         botaoCurtir.addActionListener(new ActionListener() {
@@ -90,13 +112,21 @@ public class TelaRedeSocial {
                 curtirMensagem();
             }
         });
+
+        // adiciona o método que tratará o evento de clique no botão Curtir
+        botaoVisu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                visualizarMensagem();
+            }
+        });
     }
 
     /**
      * Monta a janela
      */
     private void montarJanela() {
-        janela.setSize(500, 600);
+        janela.setSize(600, 600);
         
         janela.setLayout(new BorderLayout());
 
@@ -114,7 +144,9 @@ public class TelaRedeSocial {
         painelBotoes.setLayout(new FlowLayout());
         painelBotoes.add(botaoPostarMensagem);
         painelBotoes.add(botaoCurtir);
+        painelBotoes.add(botaoVisu);
         painelBotoes.add(botaoComentar);
+        painelBotoes.add(botaoPostarFoto);
         janela.add(painelBotoes, BorderLayout.SOUTH);
     }
     
@@ -141,6 +173,30 @@ public class TelaRedeSocial {
             }
         }
     }
+
+    private void postarFoto() {
+        String autor = JOptionPane.showInputDialog("Autor da mensagem");
+        if (autor != null) {
+            JFileChooser fileChooser = new JFileChooser();
+            int resultado = fileChooser.showOpenDialog(janela);
+    
+            if (resultado == JFileChooser.APPROVE_OPTION) {
+                File arquivoFoto = fileChooser.getSelectedFile();
+                String legenda = JOptionPane.showInputDialog("Legenda da foto");
+                if (legenda != null) {
+                    try {
+                        byte[] bytesDaFoto = Files.readAllBytes(arquivoFoto.toPath());
+                        feed.postarMensagemFoto(autor, bytesDaFoto, legenda);
+                        atualizarAreaTextoFeed();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(janela, "Erro ao carregar a foto.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        }
+    }
+
     
     /**
      * Curte uma mensagem. Solicita o identificador da mensagem ao usuário,
@@ -150,21 +206,52 @@ public class TelaRedeSocial {
         int idMensagem = Integer.parseInt(JOptionPane.showInputDialog("Id da mensagem"));
         feed.curtir(idMensagem);
         atualizarAreaTextoFeed();
-    }    
+    }
+
+    private void visualizarMensagem() {
+        int idMensagem = Integer.parseInt(JOptionPane.showInputDialog("Id da mensagem"));
+  
+        //atualizarAreaTextoFeed();
+        // Verifica se bytesDaFoto é null
+        // Se bytesDaFoto não for null, continua com o código para exibir a foto
+        byte[] bytesDaFoto = feed.getBytesDaFoto(idMensagem);
+        JFrame frameFoto = new JFrame("Foto - ");
+        if (bytesDaFoto != null) {
+            try {
+                
+                // Converte os bytes da foto para um BufferedImage
+                BufferedImage imagem = ImageIO.read(new ByteArrayInputStream(bytesDaFoto));
+                ImageIcon imagemIcon = new ImageIcon(imagem);
+
+                // Exibe a foto em um JLabel
+                JLabel labelFoto = new JLabel(imagemIcon);
+                frameFoto.getContentPane().add(labelFoto);
+
+                // Ajusta o tamanho do JFrame conforme a foto
+                frameFoto.setSize(imagemIcon.getIconWidth(), imagemIcon.getIconHeight());
+
+                frameFoto.setVisible(true);
+            } catch (IOException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Erro ao exibir a foto.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }    
+        } else {
+            JOptionPane.showMessageDialog(null, "A mensagem não tem foto.", "Informação", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
 
     /**
      * Atualiza a área de texto de exibição do Feed.
      */
-    private void atualizarAreaTextoFeed() {  
-        // Limpa a lista de publicações
+    private void atualizarAreaTextoFeed() {
         areaTextoFeed.setText("");
-
-        // Obtém as publicações do feed de notícias
+    
         List<Publicacao> publicacoes = feed.getPublicacoes();
-
-        // Percorre a lista de publicações adicionando na área de texto o texto da publicação
+    
         for (Publicacao publicacao : publicacoes) {
             areaTextoFeed.append(publicacao.getTextoExibicao());
         }
-    }   
+    }
+    
+    
 }

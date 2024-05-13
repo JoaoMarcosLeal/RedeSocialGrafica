@@ -14,9 +14,9 @@ import java.util.*;
  *          Traduzido e adaptado por Julio Cesar Alves
  */
 abstract class Mensagem implements Publicacao  {
-
     // Identificador da mensagem
     private int id;
+    //private byte[] bytesDaFoto;
     // Atributo estático para controlar os IDs das mensagens
     private static int proximoId = 1;
     // Nome do autor da mensagem
@@ -62,6 +62,13 @@ abstract class Mensagem implements Publicacao  {
         return autor;
     }
     
+    public byte[] getBytesDaFoto() {
+        if (temfoto() == false) {
+            return null;
+        }
+        return getBytesDaFoto();
+    }
+    
     /**
      * Realiza a ação de curtir uma mensagem. Na pratica apenas conta mais
      * uma curtida.
@@ -92,9 +99,9 @@ abstract class Mensagem implements Publicacao  {
         texto += "\n\t" + getTextoTempo();
         texto += "\n\t" + nroCurtidas + " pessoas curtiram isso!";
         texto += "\n" + getTextoComentarios();
-        
         return texto;
     }
+    
 
     /**
      * Metodo auxiliar usado no metodo getTextoExibicao para que seja exibido ha 
@@ -134,7 +141,7 @@ abstract class Mensagem implements Publicacao  {
         }
         return texto;
     }
-    
+    protected abstract boolean temfoto();
     /**
      * Retorna o conteúdo da mensagem (a ser sobrescrito nas subclasses)
      * 

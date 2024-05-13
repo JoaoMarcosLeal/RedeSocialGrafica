@@ -1,5 +1,6 @@
 package feed;
 import java.util.*;
+import java.io.IOException;
 
 /**
  * Classe que define o Feed de Noticias da Rede Social.
@@ -42,9 +43,10 @@ public class FeedNoticias {
      * @param arquivoFoto Nome do arquivo da foto.
      * @param legenda Legenda da foto.
      */
-    public void postarMensagemFoto(String autor, String arquivoFoto, String legenda) {
-        mensagens.add(new MensagemFoto(autor, arquivoFoto, legenda));
+    public void postarMensagemFoto(String autor, byte[] bytesDaFoto, String legenda) {
+        mensagens.add(new MensagemFoto(autor, bytesDaFoto, legenda));
     }
+    
 
     /**
      * Metodo de obtenção da lista de publicações (somente-leitura) do Feed de Noticias.     
@@ -58,6 +60,12 @@ public class FeedNoticias {
         publicacoes.addAll(mensagens);
         // Retorna a lista de publicações
         return publicacoes;
+    }
+
+    public byte[] getBytesDaFoto(int idMensagem){
+        Mensagem mensagem = buscarMensagemPeloId(idMensagem);
+        byte[] bytes = mensagem.getBytesDaFoto();
+        return bytes;
     }
     
     /**

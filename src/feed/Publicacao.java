@@ -13,4 +13,5 @@ public interface Publicacao {
 
     // Retorna a mensagem como uma string formatada
     String getTextoExibicao();
+
 }
