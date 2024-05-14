@@ -1,17 +1,17 @@
 package feed;
+
 import java.util.*;
-import java.io.IOException;
 
 /**
  * Classe que define o Feed de Noticias da Rede Social.
  * Possui uma lista de mensagens que pode ser de texto ou com foto e metodos
- para postar as mensagens e getTextoExibicao todo o Feed.
- 
- Esse eh um exemplo do livro: Programacao Orientada a Objetos com Java - uma 
- introducao pratica utilizando BlueJ.
+ * para postar as mensagens e getTextoExibicao todo o Feed.
  * 
- * @author  Michael Kölling and David J. Barnes
- *          Traduzido e adaptado por Julio Cesar Alves
+ * Esse eh um exemplo do livro: Programacao Orientada a Objetos com Java - uma
+ * introducao pratica utilizando BlueJ.
+ * 
+ * @author Michael Kölling and David J. Barnes
+ *         Traduzido e adaptado por Julio Cesar Alves
  */
 public class FeedNoticias {
     // lista de mensagens publicadas no Feed
@@ -39,17 +39,17 @@ public class FeedNoticias {
      * Metodo para postar uma mensagem com foto no feed. Cria a mensagem e a
      * adiciona na lista de mensagens.
      * 
-     * @param autor Nome do autor da mensagem.
+     * @param autor       Nome do autor da mensagem.
      * @param arquivoFoto Nome do arquivo da foto.
-     * @param legenda Legenda da foto.
+     * @param legenda     Legenda da foto.
      */
     public void postarMensagemFoto(String autor, byte[] bytesDaFoto, String legenda) {
         mensagens.add(new MensagemFoto(autor, bytesDaFoto, legenda));
     }
-    
 
     /**
-     * Metodo de obtenção da lista de publicações (somente-leitura) do Feed de Noticias.     
+     * Metodo de obtenção da lista de publicações (somente-leitura) do Feed de
+     * Noticias.
      * 
      * @return A lista de publicações do Feed
      */
@@ -68,16 +68,16 @@ public class FeedNoticias {
      * Mas se a postagem não tiver dados binários, retorna null.
      * 
      * @param idMensagem id da mensagem cujos dados serão retornados.
-     * @return           null ou vetor de bytes associado à postagem.
+     * @return null ou vetor de bytes associado à postagem.
      */
-    public byte[] getDadosBinarios(int idMensagem){
+    public byte[] getDadosBinarios(int idMensagem) {
         Mensagem mensagem = buscarMensagemPeloId(idMensagem);
         byte[] bytes = mensagem.getDadosBinarios();
         return bytes;
     }
-    
+
     /**
-     * Método para curtir uma mensagem no Feed de notícias (a partir do 
+     * Método para curtir uma mensagem no Feed de notícias (a partir do
      * identificador da mensagem).
      * 
      * @param idMensagem Identificador da mensagem
@@ -86,7 +86,7 @@ public class FeedNoticias {
         Mensagem mensagem = buscarMensagemPeloId(idMensagem);
         mensagem.curtir();
     }
-    
+
     /**
      * Método para comentar uma mensagem do Feed de notícias (a partir do
      * identificador da mensagem)
@@ -107,7 +107,7 @@ public class FeedNoticias {
     public int nroMensagens() {
         return mensagens.size();
     }
-    
+
     /**
      * Retorna a mensagem correspondente ao identificador passado. Retorna null
      * se não existir mensagem com esse identificador no feed. Obs: realiza

@@ -1,19 +1,20 @@
 package feed;
+
 import java.util.*;
 
 /**
  * Classe que representa uma mensagem em uma rede social.
  * 
- * Uma mensagem possui um autor, hora da postagem, número de curtidas e 
+ * Uma mensagem possui um autor, hora da postagem, número de curtidas e
  * comentários. O conteudo da mensagem em si deve ser tratado em subclasses.
  * 
- * Esse eh um exemplo do livro: Programacao Orientada a Objetos com Java - uma 
+ * Esse eh um exemplo do livro: Programacao Orientada a Objetos com Java - uma
  * introducao pratica utilizando BlueJ.
  * 
- * @author  Michael Kölling and David J. Barnes
- *          Traduzido e adaptado por Julio Cesar Alves
+ * @author Michael Kölling and David J. Barnes
+ *         Traduzido e adaptado por Julio Cesar Alves
  */
-abstract class Mensagem implements Publicacao  {
+abstract class Mensagem implements Publicacao {
     // Identificador da mensagem
     private int id;
     // Atributo estático para controlar os IDs das mensagens
@@ -21,14 +22,14 @@ abstract class Mensagem implements Publicacao  {
     // Nome do autor da mensagem
     private String autor;
     // Quantidade de curtidas que a mensagem recebeu
-    private int nroCurtidas;    
+    private int nroCurtidas;
     // Hora na qual a mensagem foi postada (em milissegundos)
     private long horaPostagem;
     // Lista de comentários que a mensagem recebeu
-    private ArrayList<String> comentarios;        
+    private ArrayList<String> comentarios;
 
     /**
-     * Constroi uma mensagem a partir do nome do autor. 
+     * Constroi uma mensagem a partir do nome do autor.
      * Define automaticamente a hora da postagem; inicializa as curtidas com
      * zero e cria a lista de comentarios vazia.
      * 
@@ -40,7 +41,7 @@ abstract class Mensagem implements Publicacao  {
         proximoId++;
         nroCurtidas = 0;
         horaPostagem = System.currentTimeMillis();
-        comentarios = new ArrayList<String>();		
+        comentarios = new ArrayList<String>();
     }
 
     /**
@@ -51,8 +52,8 @@ abstract class Mensagem implements Publicacao  {
     @Override
     public int getId() {
         return id;
-    }    
-    
+    }
+
     /**
      * Retorna o autor da mensagem
      */
@@ -60,7 +61,7 @@ abstract class Mensagem implements Publicacao  {
     public String getAutor() {
         return autor;
     }
-    
+
     /**
      * Retorna dados binários associados à mensagem.
      * Ex.: a imagem de uma postagem com foto.
@@ -70,7 +71,7 @@ abstract class Mensagem implements Publicacao  {
     public byte[] getDadosBinarios() {
         return null;
     }
-    
+
     /**
      * Realiza a ação de curtir uma mensagem. Na pratica apenas conta mais
      * uma curtida.
@@ -80,7 +81,7 @@ abstract class Mensagem implements Publicacao  {
     }
 
     /**
-     * Adiciona um comentario a mensagem, recebendo apenas o texto do 
+     * Adiciona um comentario a mensagem, recebendo apenas o texto do
      * comentario
      * 
      * @param comentario Texto do comentario
@@ -90,7 +91,7 @@ abstract class Mensagem implements Publicacao  {
     }
 
     /**
-     * Retorna a mensagem formatada para aparecer no Feed de Noticias. Inclui ha 
+     * Retorna a mensagem formatada para aparecer no Feed de Noticias. Inclui ha
      * quanto tempo a mensagem foi publicada.
      * 
      * @return A mensagem formada para o Feed
@@ -103,10 +104,9 @@ abstract class Mensagem implements Publicacao  {
         texto += "\n        " + getTextoComentarios();
         return texto;
     }
-    
 
     /**
-     * Metodo auxiliar usado no metodo getTextoExibicao para que seja exibido ha 
+     * Metodo auxiliar usado no metodo getTextoExibicao para que seja exibido ha
      * quanto tempo a mensagem foi postada.
      * 
      * @return Texto com a informacao formatada
@@ -115,41 +115,38 @@ abstract class Mensagem implements Publicacao  {
         long tempoAtual = System.currentTimeMillis();
         long diferenca = (tempoAtual - horaPostagem);
 
-        long diferencaSeg = diferenca/1000;
-        long diferencaMin = diferencaSeg/60;
+        long diferencaSeg = diferenca / 1000;
+        long diferencaMin = diferencaSeg / 60;
 
         if (diferencaMin < 1) {
-                return "Há " + diferencaSeg + " segundos";
-        }
-        else {
-                return "Há " + diferencaMin + " minutos";
+            return "Há " + diferencaSeg + " segundos";
+        } else {
+            return "Há " + diferencaMin + " minutos";
         }
     }
 
     /**
-     * Metodo auxiliar usado pelo metodo getTextoExibicao para obter os 
+     * Metodo auxiliar usado pelo metodo getTextoExibicao para obter os
      * comentarios da mensagem.
      */
     private String getTextoComentarios() {
         String texto = "";
         if (comentarios.isEmpty()) {
             texto += "Não há comentários...\n";
-        }
-        else {
+        } else {
             texto += "Comentários:\n";
-            for (String comentario : comentarios) {	
+            for (String comentario : comentarios) {
                 texto += "            " + comentario + "\n";
-            }            
+            }
         }
         return texto;
     }
-    
+
     /**
      * Retorna o conteúdo da mensagem (a ser sobrescrito nas subclasses)
      * 
      * @return O conteúdo da mensagem
-    */
+     */
     protected abstract String getConteudoTextoExibicao();
-
 
 }
