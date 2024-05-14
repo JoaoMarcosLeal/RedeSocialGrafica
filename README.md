@@ -2,13 +2,17 @@
 
 Este projeto é usado para exercitar os conceitos de *GUI* (Interfaces Gráficas de Usuário) e Tratamento de Exceção.
 
-A implementação usa como base uma versão traduzida do exemplo do livro *Programacao Orientada a Objetos com Java - uma introducao pratica utilizando BlueJ*, de **Barnes e Kolling**.
+A implementação usa como base uma versão traduzida do exemplo do livro *Programacao Orientada a Objetos com Java - uma introdução prática utilizando BlueJ*, de **Barnes e Kolling**.
 
 ## Sobre o Projeto
 
-Em relação ao projeto de exemplo `RedeSocial`, usado anteriormente nas aulas de Polimorfismo, este projeto acrescenta:
+Este projeto é uma evolução do exemplo anterior, `RedeSocial`, que agora incluir uma interface gráfica e que
+permite postar inclusive mensagens com fotos de verdade.
+
+Em relação ao projeto usado anteriormente nas aulas de Polimorfismo este projeto acrescenta:
 
 - Um atributo ID (identificador) para cada mensagem.
+- Alteração na classe `MensagemFoto` para tratar imagens.
 - A implementação das operações de curtir e comentar na classe `FeedNoticias`.
 - Uma interface chamada `Publicacao` que é implementada pela classe `Mensagem`.
 - Uma classe chamada `TelaRedeSocial` que implementa a interface gráfica para a Rede Social.
@@ -17,6 +21,7 @@ Em relação ao projeto de exemplo `RedeSocial`, usado anteriormente nas aulas d
 
 Faça os passos abaixo.
 Não esqueça de:
+
 - Testar sua implementação a cada passo.
 - Fazer `commit` e sincronizar as alterações após cada passo terminado.
 
@@ -72,7 +77,7 @@ Para isso, siga os passos abaixo:
 2. Importe a classe `FlatDarkLaf`, acrescentando a linha `import com.formdev.flatlaf.FlatDarkLaf;` ao arquivo `TelaRedeSocial.java`.
 3. Acrescente a chamada `FlatDarkLaf.setup();` logo após a criação da janela no método `construirJanela` da classe `TelaRedeSocial`.
    Obs.: precisa ser antes de criar os componentes da janela.
-5. Execute seu programa e veja o que mudou.
+4. Execute seu programa e veja o que mudou. O que achou do novo visual?
 
 ### Passo 1.5
 
@@ -118,9 +123,15 @@ Para isso, faça o seguinte:
 
 > **Dica** sobre o possível erro ao recarregar a caixa de seleção: 
 > 
-> A questão é que no método que preenche a caixa de seleção, há uma chamada a um método que remove todos os itens da caixa. E, quando isso acontece, um evento de seleção da caixa pode ser gerado (e isso é tratado em outra thread). Com isso, o restante do método que preenche a caixa de seleção, e o tratamento do evento (que chama o atualizar) acabam sendo executados em paralelo. Esse paralelismo pode causar erros no método de atualização.
+> A questão é que no método que preenche a caixa de seleção, há uma chamada a um método que remove todos os itens da caixa.
+> E, quando isso acontece, um evento de seleção da caixa pode ser gerado (e isso é tratado em outra thread). 
+> Com isso, o restante do método que preenche a caixa de seleção, e o tratamento do evento (que chama o atualizar) acabam 
+> sendo executados em paralelo. Esse paralelismo pode causar erros no método de atualização.
 > 
-> A ideia então é evitar que as duas coisas possam rodar em paralelo. Para isso, podemos alterar o método que preenche a caixa de seleção, acrescentado um atributo booleano que informe se os dados estão sendo carregados ou não. Algo como:
+> A ideia então é evitar que as duas coisas possam rodar em paralelo. 
+> Para isso, podemos alterar o método que preenche a caixa de seleção, acrescentado um atributo booleano que informe se 
+> os dados estão sendo carregados ou não. 
+> Algo como:
 > 
 > ```java
 > public void preencherCaixaAutores() {
@@ -130,13 +141,14 @@ Para isso, faça o seguinte:
 > }
 > ```
 > 
-> Agora, no tratamento do evento da caixa de seleção, usamos o booleano `carregandoCaixaAutores` para só chamar o método de atualização se a variável for `false` (ou seja, se a caixa não estiver sendo carregada).
+> Agora, no tratamento do evento da caixa de seleção, usamos o booleano `carregandoCaixaAutores` para só chamar 
+> o método de atualização se a variável for `false` (ou seja, se a caixa não estiver sendo carregada).
 
 Teste suas implementações.
 
 ### (Opcional) Passo 1.7
 
-Vamos criar um menu com as opções: `Postar Mensagem`, `Curtir`, `Comentar` e `Sair`.
+Vamos criar um menu com as opções: `Postar Texto`, `Postar Foto`, `Visualizar`, `Curtir`, `Comentar` e `Sair`.
 Crie os menus e trate os eventos conforme necessário.
 
 Dica: use os slides da aula de Interfaces Gráficas para ver exemplos de criação dos menus.
@@ -162,6 +174,24 @@ Assim como na primeira parte, não se esqueça de:
 
 ### Passo 2.1
 
+O que acontece se o usuário clicar no botão `Curtir` e digitar um valor que não seja um número? Ou então se clicar em cancelar?
+
+Veja que ocorre uma exceção (ele aparece no terminal do VS Code).
+Na mensagem de erro que aparece você pode ver que a exceção que é ocorre é do tipo `NumberFormatException` e ela acontece
+porque o método `parseInt` da classe `Integer` não consegue converter o texto digitado para um número.
+
+Neste passo você deve então acrescentar um tratamento para a exceção do tipo `NumberFormatException` no método que trata a opção
+de curtir as mensagens.
+Caso o usuário digite algum texto que não seja um número, ou clique em cancelar, deve ser exibida uma mensagem informando que
+o valor é inválido, e precisa ser numérico.
+
+> Dica: você pode usar a classe `JOptionPane` para exibir uma mensagem como no exemplo abaixo:
+> ```java
+> JOptionPane.showMessageDialog(janela, "Uma mensagem de erro", "Um titulo", JOptionPane.ERROR_MESSAGE);
+> ```
+
+### Passo 2.2
+
 O botão `Curtir` e o botão `Comentar` pedem para o usuário o identificador da mensagem.
 Mas se o usuário informar um identificador de uma mensagem que não existe, ocorre um erro na aplicação (você pode ver a mensagem de erro no terminal do VS Code).
 
@@ -172,12 +202,7 @@ Portanto, quando a mensagem não existir, o método deve retornar `false`.
 
 Em seguida, faça o tratamento da operação de curtir na classe `TelaRedeSocial`, usando o retorno booleano do método da classe de Feed de Notícias e informando o usuário caso o identificador digitado seja de uma mensagem que não existe.
 
-> Dica: você pode usar a classe `JOptionPane` para exibir uma mensagem como no exemplo abaixo:
-> ```java
-> JOptionPane.showMessageDialog(janela, "Uma mensagem de erro", "Um titulo", JOptionPane.ERROR_MESSAGE);
-> ```
-
-### Passo 2.2:
+### Passo 2.3:
 
 Agora, vamos alterar o método que trata os comentários na classe de Feed de Notícias.
 Mas, nesse caso, vamos alterar o método de forma que ele lance uma exceção caso o identificador da mensagem não exista (use exceção do tipo `RuntimeException`).
@@ -188,42 +213,45 @@ Veja que a mensagem de erro que aparece é a que você usou ao criar o objeto da
 Agora faça o tratamento da exceção na classe `TelaRedeSocial`.
 Por enquanto, apenas exiba a mensagem tratada para o usuário.
 
-### Passo 2.3
+### Passo 2.4
 
-1. O que você achou das estratégias que adotamos para tratar a operação de curtir (retorno booleano) e de comentar (usando exceções)?
+1. O que você achou das duas estratégias que adotamos para tratar a operação de curtir (retorno booleano) e de comentar (usando exceções)?
 2. Quais lhe parecem ser as vantagens e desvantagens de usar cada uma das estratégias?
 
 *... escreva aqui sua resposta ...*
 
-### Passo 2.4
+### Passo 2.5
 
 Em relação à exceção gerada no tratamento da operação de comentar, como podemos nos recuperar da exceção?
 Poderíamos pedir para o usuário informar o identificador da mensagem novamente, certo?
 
 Altere então o código de forma que o programa continue pedindo o identificador para o usuário até ele digitar um identificador válido.
 
-### Passo 2.5:
+### Passo 2.6:
 
 Depois da alteração anterior, o que acontece com seu programa caso o usuário tente comentar uma mensagem antes de existir qualquer publicação?
 Caso não tenha tratado esse caso, faça o tratamento adequado agora.
 
-### Passo 2.6:
+### Passo 2.7:
 
 Do jeito que fizemos até agora, o programa apenas exibe a mesma mensagem de erro da exceção.
 Mas pode ser que queiramos exibir uma mensagem mais amigável para o usuário.
 A mensagem do lançamento da exceção é escrita para outros programadores e nem sempre faz sentido para um usuário do progrma.
 Dessa forma, pode ser interessante capturar a exceção e usar os dados disponíveis nela para montar uma mensagem mais apropriada.
 
-Crie então um classe `MensagemNaoEncontradaException` que herda da classe `NoSuchElementException` (escolhemos herdar dela pois ela representa melhor a situação do erro que estamos tratando).
+Crie então um classe `MensagemNaoEncontradaException` que herda da classe `NoSuchElementException` 
+(escolhemos herdar dela pois ela representa melhor a situação do erro que estamos tratando).
 A classe deverá ter como atributo o identificador utilizado.
 Veja que o construtor pode receber apenas o identificador e não precisa, necessariamente, montar uma mensagem da exceção. 
 Dessa forma, ao lançarmos uma exceção com essa classe, não precisamos nos preocupar a mensagem.
 
 Faça com que seja lançada uma exceção da classe criada.
-Altere a classe `TelaRedeSocial` para que capture uma exceção desse tipo e defina sua própria mensagem para o usuário buscando o identificador da mensagem a partir do objeto da exceção.
-(Obs.: nesse exemplo específico, não seria necessário obter o id da classe de exceção, pois provavelmente temos como pegar isso de uma variável no método onde ocorre o erro; mas é apenas uma maneira didática de exercitarmos o conceito).
+Altere a classe `TelaRedeSocial` para que capture uma exceção desse tipo específico (`MensagemNaoEncontradaException`) e 
+defina sua própria mensagem para o usuário buscando o identificador da mensagem a partir do objeto da exceção.
+(Obs.: nesse exemplo específico, não seria necessário obter o id da classe de exceção, pois provavelmente temos como pegar 
+isso de uma variável no método onde ocorre o erro; mas é apenas uma maneira didática de exercitarmos o conceito).
 
-### (Opcional) Passo 2.7:
+### (Opcional) Passo 2.8:
 
 Altere o tratamento da exceção na classe de `TelaRedeSocial` para que o tratamento funcione apenas caso seja uma exceção do tipo que lançamos.
 Acrescente um tratamento genérico (`Exception`) que apenas mostra a mensagem de erro para os demais casos.

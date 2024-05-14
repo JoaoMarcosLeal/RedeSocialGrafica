@@ -8,8 +8,13 @@ import java.util.*;
  * Uma mensagem possui um autor, hora da postagem, número de curtidas e
  * comentários. O conteudo da mensagem em si deve ser tratado em subclasses.
  * 
- * Esse eh um exemplo do livro: Programacao Orientada a Objetos com Java - uma
+ * Esse é um exemplo do livro: Programacao Orientada a Objetos com Java - uma
  * introducao pratica utilizando BlueJ.
+ * 
+ * Repare que a classe Mensagem não é pública. Isso significa que ela não é
+ * acessível fora do pacote `feed`. Isso é feito para que o encapsulamento 
+ * seja respeitado, já que a tela consegue acessar apenas a interface
+ * Publicacao que possui apenas métodos de acesso.
  * 
  * @author Michael Kölling and David J. Barnes
  *         Traduzido e adaptado por Julio Cesar Alves
