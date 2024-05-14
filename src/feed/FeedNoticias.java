@@ -62,9 +62,17 @@ public class FeedNoticias {
         return publicacoes;
     }
 
-    public byte[] getBytesDaFoto(int idMensagem){
+    /**
+     * Retorna os dados binários associados a uma postagem.
+     * Se for uma postagem com foto, por exemplo, retorna a imagem.
+     * Mas se a postagem não tiver dados binários, retorna null.
+     * 
+     * @param idMensagem id da mensagem cujos dados serão retornados.
+     * @return           null ou vetor de bytes associado à postagem.
+     */
+    public byte[] getDadosBinarios(int idMensagem){
         Mensagem mensagem = buscarMensagemPeloId(idMensagem);
-        byte[] bytes = mensagem.getBytesDaFoto();
+        byte[] bytes = mensagem.getDadosBinarios();
         return bytes;
     }
     

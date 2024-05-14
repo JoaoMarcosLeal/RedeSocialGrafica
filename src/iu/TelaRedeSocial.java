@@ -2,6 +2,7 @@ package iu;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +21,8 @@ import java.io.IOException;
 import java.awt.Image;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.awt.image.BufferedImage;
 
 
@@ -43,7 +46,7 @@ public class TelaRedeSocial {
     // Botão para comentar uma mensagem do feed
     private JButton botaoComentar;
     // Botão para visualizar uma mensagem do feed
-    private JButton botaoVisu;
+    private JButton botaoVisualizar;
 
     // Botão para comentar uma mensagem do feed
     private JButton botaoPostarFoto;
@@ -80,28 +83,36 @@ public class TelaRedeSocial {
         // criando os componentes
         
         areaTextoFeed = new JTextArea();
-        botaoPostarMensagem = new JButton("Postar Mensagem");
-        botaoCurtir = new JButton("Curtir");
-        botaoVisu = new JButton("Visualizar");
-        botaoComentar = new JButton("Comentar");
+        botaoPostarMensagem = new JButton("Postar Texto");        
         botaoPostarFoto = new JButton("Postar Foto");
+        botaoVisualizar = new JButton("Visualizar");
+        botaoCurtir = new JButton("Curtir");
+        botaoComentar = new JButton("Comentar");
         
         // impede que o usuário edite a área de texto do feed
         areaTextoFeed.setEditable(false);
         
-        // adiciona o método que tratará o evento de clique no botão Postar Mensagem
+        // adiciona o método que tratará o evento de clique no botão Postar Mensagem de Texto
         botaoPostarMensagem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                postarMensagem();
+                postarMensagemTexto();
             }            
         });
 
-        
+        // adiciona o método que tratará o evento de clique no botão Postar Mensagem com Foto
         botaoPostarFoto.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                postarFoto();
+                postarMensagemFoto();
+            }
+        });
+
+        // adiciona o método que tratará o evento de clique no botão Visualizar
+        botaoVisualizar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                visualizarMensagem();
             }
         });
         
@@ -110,14 +121,6 @@ public class TelaRedeSocial {
             @Override
             public void actionPerformed(ActionEvent e) {
                 curtirMensagem();
-            }
-        });
-
-        // adiciona o método que tratará o evento de clique no botão Curtir
-        botaoVisu.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                visualizarMensagem();
             }
         });
     }
@@ -141,12 +144,12 @@ public class TelaRedeSocial {
         janela.add(painelCentral, BorderLayout.CENTER);
         
         JPanel painelBotoes = new JPanel();
-        painelBotoes.setLayout(new FlowLayout());
+        painelBotoes.setLayout(new GridBagLayout());
         painelBotoes.add(botaoPostarMensagem);
-        painelBotoes.add(botaoCurtir);
-        painelBotoes.add(botaoVisu);
-        painelBotoes.add(botaoComentar);
         painelBotoes.add(botaoPostarFoto);
+        painelBotoes.add(botaoVisualizar);
+        painelBotoes.add(botaoCurtir);
+        painelBotoes.add(botaoComentar);
         janela.add(painelBotoes, BorderLayout.SOUTH);
     }
     
@@ -158,10 +161,10 @@ public class TelaRedeSocial {
     }
     
     /**
-     * Posta uma mensagem no feed. Solicita o autor e a mensagem ao usuário,
+     * Posta uma mensagem de texto no feed. Solicita o autor e a mensagem ao usuário,
      * posta no Feed e atualiza a área de texto de exibição do feed.
      */
-    private void postarMensagem() {
+    private void postarMensagemTexto() {
         String autor = JOptionPane.showInputDialog("Autor da mensagem");
         // Se o usuário digitou algum autor e confirmou
         if(autor != null) {
@@ -174,15 +177,29 @@ public class TelaRedeSocial {
         }
     }
 
-    private void postarFoto() {
+    /**
+     * Posta uma mensagem com foto no feed. Solicita o autor, o arquivo da imagem e uma legenda,
+     * posta no Feed e atualiza a área de texto de exibição do feed.
+     */
+    private void postarMensagemFoto() {
         String autor = JOptionPane.showInputDialog("Autor da mensagem");
         if (autor != null) {
-            JFileChooser fileChooser = new JFileChooser();
-            int resultado = fileChooser.showOpenDialog(janela);
-    
+            // Cria um objeto da tela de escolha de arquivos
+            JFileChooser selecionadorArquivo = new JFileChooser();
+            // Cria um fitlro para que o usuário selecione apenas imagens com extensões jpg, jpeg e png
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "Imagens", "jpg", "jpeg", "png");
+            // Utiliza o filtro para a tela de seleção de arquivos            
+            selecionadorArquivo.setFileFilter(filter);
+            
+            // Exibe a tela e verifica se o usuário selecionou um arquivo
+            int resultado = selecionadorArquivo.showOpenDialog(janela);    
             if (resultado == JFileChooser.APPROVE_OPTION) {
-                File arquivoFoto = fileChooser.getSelectedFile();
+                // Obtém o arquivo selecionado
+                File arquivoFoto = selecionadorArquivo.getSelectedFile();
+                // Pede uma legenda para o usuário
                 String legenda = JOptionPane.showInputDialog("Legenda da foto");
+                // Se foi digitada uma legenda, obtém a imagem como vetor de bytes e posta a mensagem com foto
                 if (legenda != null) {
                     try {
                         byte[] bytesDaFoto = Files.readAllBytes(arquivoFoto.toPath());
@@ -196,7 +213,6 @@ public class TelaRedeSocial {
             }
         }
     }
-
     
     /**
      * Curte uma mensagem. Solicita o identificador da mensagem ao usuário,
@@ -208,28 +224,31 @@ public class TelaRedeSocial {
         atualizarAreaTextoFeed();
     }
 
+    /**
+     * Visualiza o conteúdo de uma mensagem (mostra a imagem de uma mensagem com foto, por exemplo)
+     */
     private void visualizarMensagem() {
         int idMensagem = Integer.parseInt(JOptionPane.showInputDialog("Id da mensagem"));
   
-        //atualizarAreaTextoFeed();
-        // Verifica se bytesDaFoto é null
-        // Se bytesDaFoto não for null, continua com o código para exibir a foto
-        byte[] bytesDaFoto = feed.getBytesDaFoto(idMensagem);
-        JFrame frameFoto = new JFrame("Foto - ");
+        // obtém os dados binários associados à mensagem
+        byte[] bytesDaFoto = feed.getDadosBinarios(idMensagem);
+
         if (bytesDaFoto != null) {
             try {
-                
+                // Crie uma janela para exibir a imagem
+                JFrame frameFoto = new JFrame("Foto - ");
                 // Converte os bytes da foto para um BufferedImage
                 BufferedImage imagem = ImageIO.read(new ByteArrayInputStream(bytesDaFoto));
                 ImageIcon imagemIcon = new ImageIcon(imagem);
 
-                // Exibe a foto em um JLabel
+                // Exibe a foto em um rítulo
                 JLabel labelFoto = new JLabel(imagemIcon);
                 frameFoto.getContentPane().add(labelFoto);
 
-                // Ajusta o tamanho do JFrame conforme a foto
+                // Ajusta o tamanho da janela conforme a foto
                 frameFoto.setSize(imagemIcon.getIconWidth(), imagemIcon.getIconHeight());
 
+                // Exibe a janela
                 frameFoto.setVisible(true);
             } catch (IOException e) {
                 e.printStackTrace();

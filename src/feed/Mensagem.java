@@ -16,7 +16,6 @@ import java.util.*;
 abstract class Mensagem implements Publicacao  {
     // Identificador da mensagem
     private int id;
-    //private byte[] bytesDaFoto;
     // Atributo estático para controlar os IDs das mensagens
     private static int proximoId = 1;
     // Nome do autor da mensagem
@@ -62,11 +61,14 @@ abstract class Mensagem implements Publicacao  {
         return autor;
     }
     
-    public byte[] getBytesDaFoto() {
-        if (temfoto() == false) {
-            return null;
-        }
-        return getBytesDaFoto();
+    /**
+     * Retorna dados binários associados à mensagem.
+     * Ex.: a imagem de uma postagem com foto.
+     * 
+     * @return null, já que aqui na superclasse não há o que ser retornado.
+     */
+    public byte[] getDadosBinarios() {
+        return null;
     }
     
     /**
@@ -96,9 +98,9 @@ abstract class Mensagem implements Publicacao  {
     @Override
     public String getTextoExibicao() {
         String texto = "  [" + id + "]   " + autor + " escreveu: " + getConteudoTextoExibicao();
-        texto += "\n\t" + getTextoTempo();
-        texto += "\n\t" + nroCurtidas + " pessoas curtiram isso!";
-        texto += "\n" + getTextoComentarios();
+        texto += "\n        " + getTextoTempo();
+        texto += "\n        " + nroCurtidas + " pessoas curtiram isso!";
+        texto += "\n        " + getTextoComentarios();
         return texto;
     }
     
@@ -131,17 +133,17 @@ abstract class Mensagem implements Publicacao  {
     private String getTextoComentarios() {
         String texto = "";
         if (comentarios.isEmpty()) {
-            texto += "\tNao ha comentarios...\n";
+            texto += "Não há comentários...\n";
         }
         else {
-            texto += "\tComentários:\n";
+            texto += "Comentários:\n";
             for (String comentario : comentarios) {	
-                texto += "\t\t" + comentario + "\n";
+                texto += "            " + comentario + "\n";
             }            
         }
         return texto;
     }
-    protected abstract boolean temfoto();
+    
     /**
      * Retorna o conteúdo da mensagem (a ser sobrescrito nas subclasses)
      * 

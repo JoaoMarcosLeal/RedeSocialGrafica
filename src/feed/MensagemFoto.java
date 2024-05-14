@@ -34,27 +34,24 @@ class MensagemFoto extends Mensagem {
         this.bytesDaFoto = bytesDaFoto;
         this.legenda = legenda;
     }
-
-    @Override
+    
     /**
      * Retorna o conteúdo da mensagem (nesse caso a legenda da foto)
      * 
      * @return O conteúdo da mensagem
      */
+    @Override
     protected String getConteudoTextoExibicao() {
-        return legenda;
+        return "Postada foto com a legenda: " + legenda;
     }
 
     /**
-     * Retorna os bytes da foto.
+     * Retorna a foto da postagem
      * 
-     * @return Bytes da foto
+     * @return Vetor de bytes contendo os dados da foto
      */
-    public byte[] getBytesDaFoto() {
+    @Override
+    public byte[] getDadosBinarios() {
         return bytesDaFoto;
-    }
-
-    public boolean temfoto() {
-        return true;
     }
 }
