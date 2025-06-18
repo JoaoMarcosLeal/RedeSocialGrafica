@@ -22,6 +22,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.image.BufferedImage;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+
 /**
  * Classe criada para implementar a interface gráfica da Rede Social.
  * O objetivo dessa implementação é didático!
@@ -68,7 +70,7 @@ public class TelaRedeSocial {
     private void construirJanela() throws HeadlessException {
         janela = new JFrame("GUI - Rede Social");
         janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        FlatDarkLaf.setup();
         criarComponentes();
 
         montarJanela();
