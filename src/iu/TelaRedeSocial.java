@@ -24,6 +24,8 @@ import java.awt.image.BufferedImage;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 
+import java.awt.Font;
+
 /**
  * Classe criada para implementar a interface gráfica da Rede Social.
  * O objetivo dessa implementação é didático!
@@ -149,8 +151,8 @@ public class TelaRedeSocial {
      */
     private void montarJanela() {
         janela.setSize(600, 600);
-
         janela.setLayout(new BorderLayout());
+        areaTextoFeed.setFont(new Font("Cascadia Code Italic", Font.ITALIC, 16));
 
         JPanel painelSuperior = new JPanel();
         painelSuperior.setLayout(new FlowLayout());
