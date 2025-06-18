@@ -47,6 +47,9 @@ public class TelaRedeSocial {
     // Botão para comentar uma mensagem do feed
     private JButton botaoPostarFoto;
 
+    // Botão para atualizar o feed
+    private JButton botaoAtualizarFeed;
+
     // Objeto que representa a Regra de Negócios (a lógica da Rede Social em si)
     private FeedNoticias feed;
 
@@ -83,6 +86,7 @@ public class TelaRedeSocial {
         botaoVisualizar = new JButton("Visualizar");
         botaoCurtir = new JButton("Curtir");
         botaoComentar = new JButton("Comentar");
+        botaoAtualizarFeed = new JButton("Atualizar feed");
 
         // impede que o usuário edite a área de texto do feed
         areaTextoFeed.setEditable(false);
@@ -128,6 +132,14 @@ public class TelaRedeSocial {
                 comentar();
             }
         });
+
+        // adiciona o método que tratará o evento de clique no botão Atualizar feed
+        botaoAtualizarFeed.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                atualizarAreaTextoFeed();
+            }
+        });
     }
 
     /**
@@ -146,7 +158,8 @@ public class TelaRedeSocial {
         JPanel painelCentral = new JPanel();
         painelCentral.setLayout(new BoxLayout(painelCentral, BoxLayout.Y_AXIS));
         painelCentral.add(areaTextoFeed);
-        janela.add(painelCentral, BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(painelCentral);
+        janela.add(scrollPane, BorderLayout.CENTER);
 
         JPanel painelBotoes = new JPanel();
         painelBotoes.setLayout(new GridBagLayout());
@@ -155,6 +168,7 @@ public class TelaRedeSocial {
         painelBotoes.add(botaoVisualizar);
         painelBotoes.add(botaoCurtir);
         painelBotoes.add(botaoComentar);
+        painelBotoes.add(botaoAtualizarFeed);
         janela.add(painelBotoes, BorderLayout.SOUTH);
     }
 
