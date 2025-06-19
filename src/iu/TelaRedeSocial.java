@@ -48,7 +48,10 @@ public class TelaRedeSocial {
     // Botão para visualizar uma mensagem do feed
     private JButton botaoVisualizar;
 
-    // Botão para comentar uma mensagem do feed
+    // Caixa de selecao de autores
+    private JComboBox<String> caixaDeSelecao;
+
+    // Botão para postar uma foto no feed
     private JButton botaoPostarFoto;
 
     // Botão para atualizar o feed
@@ -57,12 +60,15 @@ public class TelaRedeSocial {
     // Objeto que representa a Regra de Negócios (a lógica da Rede Social em si)
     private FeedNoticias feed;
 
+    // Tratamento de possível erro(Checar dica passo 1.6 do README)
+    boolean carregandoCaixaDeSelecao;
+
     /**
      * Construtor da classe: cria o feed, os componentes e monta a tela.
      */
     public TelaRedeSocial() {
         feed = new FeedNoticias();
-
+        carregandoCaixaDeSelecao = false;
         construirJanela();
     }
 
@@ -91,6 +97,10 @@ public class TelaRedeSocial {
         botaoCurtir = new JButton("Curtir");
         botaoComentar = new JButton("Comentar");
         botaoAtualizarFeed = new JButton("Atualizar feed");
+        caixaDeSelecao = new JComboBox<>();
+
+        // Carrega os autores na caixa de seleção
+        recarregarCaixaDeSelecao();
 
         // impede que o usuário edite a área de texto do feed
         areaTextoFeed.setEditable(false);
@@ -144,6 +154,16 @@ public class TelaRedeSocial {
                 atualizarAreaTextoFeed();
             }
         });
+
+        // adiciona o método que tratará o evento de clique no botão Atualizar feed
+        caixaDeSelecao.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!carregandoCaixaDeSelecao) {
+                    atualizarAreaTextoFeed();
+                }
+            }
+        });
     }
 
     /**
@@ -156,6 +176,9 @@ public class TelaRedeSocial {
 
         JPanel painelSuperior = new JPanel();
         painelSuperior.setLayout(new FlowLayout());
+        painelSuperior.add(new JLabel("Caixa de seleção de autores:"));
+        painelSuperior.add(caixaDeSelecao);
+        painelSuperior.add(new JLabel("|"));
         painelSuperior.add(new JLabel("Feed de Notícias"));
         janela.add(painelSuperior, BorderLayout.NORTH);
 
@@ -306,11 +329,36 @@ public class TelaRedeSocial {
     private void atualizarAreaTextoFeed() {
         areaTextoFeed.setText("");
 
-        List<Publicacao> publicacoes = feed.getPublicacoes();
+        List<Publicacao> publicacoes;
+        // Obtém o autor selecionado
+        String autorSelecionado = caixaDeSelecao.getItemAt(caixaDeSelecao.getSelectedIndex());
+
+        if (autorSelecionado.equals("Todos")) {
+            publicacoes = feed.getPublicacoes();
+        } else {
+            publicacoes = feed.getPublicacoes(autorSelecionado);
+        }
 
         for (Publicacao publicacao : publicacoes) {
             areaTextoFeed.append(publicacao.getTextoExibicao());
         }
+
+        recarregarCaixaDeSelecao();
     }
 
+    /**
+     * Recarrega a caixa de seleção com os autores
+     */
+    private void recarregarCaixaDeSelecao() {
+        carregandoCaixaDeSelecao = true;
+        // Remove todos os elementos da caixa de seleção
+        caixaDeSelecao.removeAllItems();
+
+        caixaDeSelecao.addItem("Todos");
+        List<String> autores = feed.obterAutores();
+        for (String autor : autores) {
+            caixaDeSelecao.addItem(autor);
+        }
+        carregandoCaixaDeSelecao = false;
+    }
 }

@@ -16,12 +16,15 @@ import java.util.*;
 public class FeedNoticias {
     // lista de mensagens publicadas no Feed
     private List<Mensagem> mensagens;
+    // lista de autores de mensagens no Feed
+    private List<String> autores;
 
     /**
      * Cria o Feed de Noticias (apenas inicializa a lista de mensagens)
      */
     public FeedNoticias() {
         mensagens = new ArrayList<>();
+        autores = new ArrayList<>();
     }
 
     /**
@@ -33,6 +36,7 @@ public class FeedNoticias {
      */
     public void postarMensagemTexto(String autor, String texto) {
         mensagens.add(new MensagemTexto(autor, texto));
+        adicionarAutor(autor);
     }
 
     /**
@@ -45,6 +49,7 @@ public class FeedNoticias {
      */
     public void postarMensagemFoto(String autor, byte[] bytesDaFoto, String legenda) {
         mensagens.add(new MensagemFoto(autor, bytesDaFoto, legenda));
+        adicionarAutor(autor);
     }
 
     /**
@@ -109,6 +114,42 @@ public class FeedNoticias {
     }
 
     /**
+     * Faz uma busca na lista de autores de mensagens.
+     * 
+     * @param nome nome do autor da mensagem
+     * @return nome do autor caso ele exista, null caso contrário
+     */
+    private String buscarAutor(String nome) {
+        for (String autor : autores) {
+            if (autor.equals(nome)) {
+                return autor;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Se um ator não existe, o adiciona na lista de autores.
+     * 
+     * @param autor autor de uma mensagem
+     */
+    private void adicionarAutor(String autor) {
+        if (buscarAutor(autor) != null) {
+            return;
+        }
+        autores.add(autor);
+    }
+
+    /**
+     * Retorna uma lista de autores que já mandaram mensagens no sistema
+     * 
+     * @return uma lista contendo os autores
+     */
+    public List<String> obterAutores() {
+        return new ArrayList<>(autores);
+    }
+
+    /**
      * Retorna a mensagem correspondente ao identificador passado. Retorna null
      * se não existir mensagem com esse identificador no feed. Obs: realiza
      * busca simples (percorrendo a lista).
@@ -123,5 +164,22 @@ public class FeedNoticias {
             }
         }
         return null;
+    }
+
+    /**
+     * Retorna uma lista contendo as mensagens de um autor em específico.
+     * Caso o autor não exista, retorna uma lista vazia.
+     * 
+     * @param autor autor das mensagens
+     * @return lista de mensagens
+     */
+    public List<Publicacao> getPublicacoes(String autor) {
+        List<Publicacao> mensagens = new ArrayList<>();
+        for (Publicacao mensagem : this.mensagens) {
+            if (mensagem.getAutor().equals(autor)) {
+                mensagens.add(mensagem);
+            }
+        }
+        return mensagens;
     }
 }
