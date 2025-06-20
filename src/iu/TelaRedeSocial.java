@@ -48,6 +48,19 @@ public class TelaRedeSocial {
     // Botão para visualizar uma mensagem do feed
     private JButton botaoVisualizar;
 
+    // Opção no menu para postar mensagem de texto no feed
+    private JMenuItem itemPostarMensagem;
+    // Opção no menu para curtir uma mensagem no feed
+    private JMenuItem itemCurtir;
+    // Opção no menu para comentar uma mensagem no feed
+    private JMenuItem itemComentar;
+    // Opção no menu para visualizar uma mensagem no feed
+    private JMenuItem itemVisualizar;
+    // Opção no menu para postar uma foto no feed
+    private JMenuItem itemPostarFoto;
+    // Opção no menu para sair do programa
+    private JMenuItem itemSair;
+
     // Caixa de selecao de autores
     private JComboBox<String> caixaDeSelecao;
 
@@ -79,6 +92,7 @@ public class TelaRedeSocial {
         janela = new JFrame("GUI - Rede Social");
         janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         FlatDarkLaf.setup();
+        montarMenu();
         criarComponentes();
 
         montarJanela();
@@ -162,6 +176,53 @@ public class TelaRedeSocial {
                 if (!carregandoCaixaDeSelecao) {
                     atualizarAreaTextoFeed();
                 }
+            }
+        });
+
+        // adiciona o método que tratará o evento de clique no menu "Postar Foto"
+        itemPostarFoto.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                postarMensagemFoto();
+            }
+        });
+
+        // adiciona o método que tratará o evento de clique no menu "Visualizar"
+        itemVisualizar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                visualizarMensagem();
+            }
+        });
+
+        // adiciona o método que tratará o evento de clique no menu "Curtir"
+        itemCurtir.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                curtirMensagem();
+            }
+        });
+
+        // adiciona o método que tratará o evento de clique no menu "Comentar"
+        itemComentar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                comentar();
+            }
+        });
+
+        // adiciona o método que tratará o evento de clique no menu "Postar Texto"
+        itemPostarMensagem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                atualizarAreaTextoFeed();
+            }
+        });
+
+        itemSair.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
             }
         });
     }
@@ -361,4 +422,33 @@ public class TelaRedeSocial {
         }
         carregandoCaixaDeSelecao = false;
     }
+
+    /**
+     * Monta o menu da Janela
+     */
+    private void montarMenu() {
+        // cria a barra de menu, o menu e o item de menu
+        JMenuBar barraMenu = new JMenuBar();
+        JMenu menuOpcoes = new JMenu("Opções");
+        itemComentar = new JMenu("Comentar");
+        itemCurtir = new JMenu("Curtir");
+        itemVisualizar = new JMenu("Visualizar");
+        itemSair = new JMenu("Sair");
+        itemPostarFoto = new JMenu("Postar foto");
+        itemPostarMensagem = new JMenu("Postar texto");
+
+        // adiciona o item de menu ao menu, e o menu à barra
+        menuOpcoes.add(itemComentar);
+        menuOpcoes.add(itemCurtir);
+        menuOpcoes.add(itemVisualizar);
+        menuOpcoes.addSeparator(); // Linha separadora
+        menuOpcoes.add(itemPostarFoto);
+        menuOpcoes.add(itemPostarMensagem);
+        menuOpcoes.addSeparator();
+        menuOpcoes.add(itemSair);
+        barraMenu.add(menuOpcoes);
+        // define a barra de menu para a janela
+        janela.setJMenuBar(barraMenu);
+    }
+
 }
