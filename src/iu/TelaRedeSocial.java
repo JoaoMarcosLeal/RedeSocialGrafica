@@ -179,6 +179,14 @@ public class TelaRedeSocial {
             }
         });
 
+        // adiciona o método que tratará o evento de clique no menu "Postar Mensagem"
+        itemPostarMensagem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                postarMensagemTexto();
+            }
+        });
+
         // adiciona o método que tratará o evento de clique no menu "Postar Foto"
         itemPostarFoto.addActionListener(new ActionListener() {
             @Override
@@ -430,12 +438,12 @@ public class TelaRedeSocial {
         // cria a barra de menu, o menu e o item de menu
         JMenuBar barraMenu = new JMenuBar();
         JMenu menuOpcoes = new JMenu("Opções");
-        itemComentar = new JMenu("Comentar");
-        itemCurtir = new JMenu("Curtir");
-        itemVisualizar = new JMenu("Visualizar");
-        itemSair = new JMenu("Sair");
-        itemPostarFoto = new JMenu("Postar foto");
-        itemPostarMensagem = new JMenu("Postar texto");
+        itemComentar = new JMenuItem("Comentar");
+        itemCurtir = new JMenuItem("Curtir");
+        itemVisualizar = new JMenuItem("Visualizar");
+        itemSair = new JMenuItem("Sair");
+        itemPostarFoto = new JMenuItem("Postar foto");
+        itemPostarMensagem = new JMenuItem("Postar texto");
 
         // adiciona o item de menu ao menu, e o menu à barra
         menuOpcoes.add(itemComentar);
